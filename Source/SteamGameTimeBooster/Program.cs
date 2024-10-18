@@ -85,11 +85,17 @@ internal static class Program
     {
         while (true)
         {
-            WriteColored("⌨️ Enter your steam username: ", ConsoleColor.Yellow);
+            WriteColored("⌨️ Enter your steam username: (type 'help' if you don't know how to get it) ", ConsoleColor.Yellow);
             userName = Console.ReadLine();
 
             if (string.IsNullOrWhiteSpace(userName))
                 WriteColoredLine("❌ Input cannot be empty. Please try again.", ConsoleColor.Red);
+
+            else if (userName == "help")
+            {
+                WriteColoredLine("ℹ️ Just enter the name you normally log in with.", ConsoleColor.DarkYellow);
+                Console.WriteLine();
+            }
 
             else break;
         }
@@ -104,8 +110,9 @@ internal static class Program
 
             else if (sessionId == "help")
             {
-                WriteColoredLine("Login to the official Steam Community website in your web browser (NOTE: Steam Store cookies does not work)", ConsoleColor.DarkYellow);
-                WriteColoredLine("Press F12 > Application/Storage > Cookies > Select the Steam website > Copy the value of sessionId cookie.", ConsoleColor.DarkYellow);
+                WriteColoredLine("ℹ️ Login to the official Steam Community website (https://steamcommunity.com/) in your web browser.", ConsoleColor.DarkYellow);
+                WriteColoredLine("ℹ️ Press F12 > Application/Storage > Cookies > Select the Steam website > Copy the value of sessionId cookie.", ConsoleColor.DarkYellow);
+                Console.WriteLine();
             }
 
             else break;
@@ -121,8 +128,9 @@ internal static class Program
 
             else if (steamLoginSecure == "help")
             {
-                WriteColoredLine("Login to the official Steam Community website in your web browser (NOTE: Steam Store cookies does not work)", ConsoleColor.DarkYellow);
-                WriteColoredLine("Press F12 > Application / Storage > Cookies > Select the Steam website > Copy the value of steamLoginSecure cookie.", ConsoleColor.DarkYellow);
+                WriteColoredLine("ℹ️ Login to the official Steam Community website (https://steamcommunity.com/) in your web browser.", ConsoleColor.DarkYellow);
+                WriteColoredLine("ℹ️ Press F12 > Application / Storage > Cookies > Select the Steam website > Copy the value of steamLoginSecure cookie.", ConsoleColor.DarkYellow);
+                Console.WriteLine();
             }
 
             else break;
@@ -156,7 +164,7 @@ internal static class Program
     {
         while (true)
         {
-            WriteColored("⌨️ Enter duration in hours:minutes (e.g., 1:30): ", ConsoleColor.Yellow);
+            WriteColored("⌨️ Enter duration in hours:minutes (e.g., 01:30): ", ConsoleColor.Yellow);
             string? input = Console.ReadLine();
 
             if (string.IsNullOrWhiteSpace(input))
@@ -168,7 +176,7 @@ internal static class Program
             if (TimeSpan.TryParseExact(input, @"h\:mm", CultureInfo.InvariantCulture, out TimeSpan duration) && duration > TimeSpan.Zero)
                 return duration;
             else
-                WriteColoredLine("❌ Invalid duration format. Please enter the time in hours:minutes format (e.g., 1:30).", ConsoleColor.Red);
+                WriteColoredLine("❌ Invalid duration format.", ConsoleColor.Red);
         }
     }
 
