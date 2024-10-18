@@ -1,39 +1,70 @@
-[![Build status](https://ci.appveyor.com/api/projects/status/96wf12emnlbmo4sj?svg=true)](https://ci.appveyor.com/project/JonasNilson/idle-master-extended)
-![Github All Releases](https://img.shields.io/github/downloads/JonasNilson/idle_master_extended/total.svg)
+# 🚀 SteamGameTimeBooster
 
-# 🚀 Idle Master Extended
+**SteamGameTimeBooster** is a tool designed to automate the simulation of playtime in Steam titles. With this utility, you can simulate that several games are running, which increases the recorded playtime on your account.
 
-Get your [Steam Trading Cards](https://steamcommunity.com/tradingcards/) the quickest possible way.
+## ✨ Features
+- 🎮 **Simulation of running games on Steam**: Allows you to simulate that one or several games are running to add playtime.
+- 📜 **Multiple game selection**: You can select multiple games from your Steam library to run them simultaneously.
+- ⏳ **Customizable duration**: Configure the time during which you want the games to be active.
+- ✅ **Automatic closure**: Processes automatically close when the established time is reached.
 
+## 📋 Requirements
+- Have **Steam** installed and running on your system.
+- Own a Steam account with access to your game library.
 
-## ❓ But what is Idle Master Extended?
+## 🕹 Usage
 
-🔧 This is a fork of the **discontinued** [Idle Master](https://github.com/jshackles/idle_master) project by [jshackles](https://github.com/jshackles) (also known for [Enhanced Steam](https://github.com/jshackles/Enhanced_Steam)):
+1. Run `SteamGameTimeBooster.exe`.
+2. Follow the on-screen instructions to enter your `userName`, `sessionId`, and `steamLoginSecure`:
+   - Open your browser and log in to [Steam Community](https://steamcommunity.com/).
+   - Press **F12** to open the developer tools.
+   - Go to the **Application/Storage** tab > **Cookies**.
+   - Find and copy the values of the `sessionid` and `steamLoginSecure` cookies.
+3. Once logged in, a list of the games in your account will be displayed.
+4. Enter the **IDs** of the games you want to run, separated by commas.
+5. Indicate the desired duration in `hh:mm` (hours:minutes) format.
+6. The program will start the simulated games for the time you have defined.
+7. Once the time is up, the processes will close automatically.
 
-> This program will determine which of your Steam games still have Steam Trading Card drops remaining, and will go through each application to simulate you being “in-game” so that cards will drop. It will check periodically to see if the game you’re idling has card drops remaining. When only one drop remains, it will start checking more frequently. When the game you’re idling has no more cards, it’ll move on to the next game. When no more cards are available, the program will terminate. 
-> 
-> This application requires Steam to be open and for you to be logged in.  This program is now being developed exclusively for Microsoft Windows. Non-Windows versions are available in the [Python repository](https://github.com/jshackles/idle_master_py) but may be deprecated or feature incomplete.
-> 
-> Source: [`jshackles/idle_master`](https://github.com/jshackles/idle_master) 
+## 📝 Example of Use
 
+```
+ ██████╗  █████╗ ███╗   ███╗███████╗    ████████╗██╗███╗   ███╗███████╗    ██████╗  ██████╗  ██████╗ ███████╗████████╗███████╗██████╗   
+██╔════╝ ██╔══██╗████╗ ████║██╔════╝    ╚══██╔══╝██║████╗ ████║██╔════╝    ██╔══██╗██╔═══██╗██╔═══██╗██╔════╝╚══██╔══╝██╔════╝██╔══██╗  
+██║  ███╗███████║██╔████╔██║█████╗         ██║   ██║██╔████╔██║█████╗      ██████╔╝██║   ██║██║   ██║███████╗   ██║   █████╗  ██████╔╝  
+██║   ██║██╔══██║██║╚██╔╝██║██╔══╝         ██║   ██║██║╚██╔╝██║██╔══╝      ██╔══██╗██║   ██║██║   ██║╚════██║   ██║   ██╔══╝  ██╔══██╗  
+╚██████╔╝██║  ██║██║ ╚═╝ ██║███████╗       ██║   ██║██║ ╚═╝ ██║███████╗    ██████╔╝╚██████╔╝╚██████╔╝███████║   ██║   ███████╗██║  ██║  
+ ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝       ╚═╝   ╚═╝╚═╝     ╚═╝╚══════╝    ╚═════╝  ╚═════╝  ╚═════╝ ╚══════╝   ╚═╝   ╚══════╝╚═╝  ╚═╝  
 
-## 🔽 Download
+⌨️ Enter your steam username: mySteamUser
+⌨️ Enter your steam sessionId: 123abc456def789ghi
+⌨️ Enter your steam steamLoginSecure: abcdefg1234567890
 
-- https://github.com/JonasNilson/idle_master_extended/releases
+🎮 Available Games:
+    [1000] Dota 2
+    [2000] Counter-Strike: Global Offensive
+    [3000] Garry's Mod
 
+⌨️ Enter the game IDs separated by commas (e.g., 570, 4000): 1000, 3000
 
-## 💭 [Idle Master Extended Wiki](https://github.com/JonasNilson/idle_master_extended/wiki)
+⌨️ Enter duration in hours:minutes (e.g., 01:30): 02:00
 
-- 🧰 [Get started](https://github.com/JonasNilson/idle_master_extended/wiki/Get-started)
-- ✨ [Features](https://github.com/JonasNilson/idle_master_extended/wiki/Features)
-- 🔄 [FAQ](https://github.com/JonasNilson/idle_master_extended/wiki/FAQ)
-- 🔨 [Troubleshooting](https://github.com/JonasNilson/idle_master_extended/wiki/Troubleshooting-and-common-solutions)
-- 🎨 [Contribute](https://github.com/JonasNilson/idle_master_extended/wiki/Contribute)
-- 🎁 [Donate](https://github.com/JonasNilson/idle_master_extended/wiki/Donate)
+⏳ Starting processes for selected games for 120 minutes.
 
+⏹️ Process for game {appId} has been terminated after {duration.TotalMinutes} minute(s).
 
-## Credits
+```
 
-Idle Master was created by [jshackles](https://github.com/jshackles), based on the original code created by Stumpokapow.
+## ⚠️ Warnings
 
-Idle Master was written in `C#` using `Steamworks.NET` and [`CSteamworks`](https://github.com/rlabrecque/CSteamworks), and using open source icons from [Open Iconic](https://github.com/iconic/open-iconic).
+- **SteamGameTimeBooster** is a tool created **for educational purposes**. I am not responsible for the misuse of this application.
+- Although to date **no cases of bans have been recorded** related to the use of tools like this, you should use it at your own risk.
+- This repository exists with the purpose of showing how one can interact with Steam processes and simulate game sessions.
+
+## 👨‍💻 Credits
+
+- SteamGameTimeBooster was created by [Hidden Space](https://github.com/hidden-space-xyz), based on the original code created by [JonasNilson](https://github.com/JonasNilson), which in turn is based on the version by [jshackles](https://github.com/jshackles).
+
+## 📝 License
+
+This project is licensed under the [GNU General Public License v2.0](LICENSE).
