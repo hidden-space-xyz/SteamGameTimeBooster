@@ -96,22 +96,34 @@ internal static class Program
 
         while (true)
         {
-            WriteColored("⌨️ Enter your steam sessionId: ", ConsoleColor.Yellow);
+            WriteColored("⌨️ Enter your steam sessionId: (type 'help' if you don't know how to get it) ", ConsoleColor.Yellow);
             sessionId = Console.ReadLine();
 
             if (string.IsNullOrWhiteSpace(sessionId))
                 WriteColoredLine("❌ Input cannot be empty. Please try again.", ConsoleColor.Red);
+
+            else if (sessionId == "help")
+            {
+                WriteColoredLine("Login to the official Steam Community website in your web browser (NOTE: Steam Store cookies does not work)", ConsoleColor.DarkYellow);
+                WriteColoredLine("Press F12 > Application/Storage > Cookies > Select the Steam website > Copy the value of sessionId cookie.", ConsoleColor.DarkYellow);
+            }
 
             else break;
         }
 
         while (true)
         {
-            WriteColored("⌨️ Enter your steam steamLoginSecure: ", ConsoleColor.Yellow);
+            WriteColored("⌨️ Enter your steam steamLoginSecure: (type 'help' if you don't know how to get it) ", ConsoleColor.Yellow);
             steamLoginSecure = Console.ReadLine();
 
             if (string.IsNullOrWhiteSpace(steamLoginSecure))
                 WriteColoredLine("❌ Input cannot be empty. Please try again.", ConsoleColor.Red);
+
+            else if (steamLoginSecure == "help")
+            {
+                WriteColoredLine("Login to the official Steam Community website in your web browser (NOTE: Steam Store cookies does not work)", ConsoleColor.DarkYellow);
+                WriteColoredLine("Press F12 > Application / Storage > Cookies > Select the Steam website > Copy the value of steamLoginSecure cookie.", ConsoleColor.DarkYellow);
+            }
 
             else break;
         }
