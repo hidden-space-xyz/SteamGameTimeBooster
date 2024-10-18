@@ -3,14 +3,17 @@
 **SteamGameTimeBooster** is a tool designed to automate the simulation of playtime in Steam titles. With this utility, you can simulate that several games are running, which increases the recorded playtime on your account.
 
 ## ✨ Features
-- 🎮 **Simulation of running games on Steam**: Allows you to simulate that one or several games are running to add playtime.
-- 📜 **Multiple game selection**: You can select multiple games from your Steam library to run them simultaneously.
-- ⏳ **Customizable duration**: Configure the time during which you want the games to be active.
-- ✅ **Automatic closure**: Processes automatically close when the established time is reached.
+- 🎮 **Simulate Running Games on Steam**: Easily simulate that one or multiple games are running on your Steam account to accumulate playtime. This is perfect for leveling up badges or showcasing playtime on your profile.
+- 📜 **Multiple Game Selection**: Select multiple games from your Steam library to run simultaneously. Accumulate playtime on several games at once without the hassle of launching each game individually.
+- ⏳ **Customizable Duration**: Set the exact duration you want the games to appear active. Whether it's for a few minutes or several hours, you have full control over the simulation time.
+- ✅ **Automatic Closure**: Processes automatically terminate when the specified time is reached. No need to manually stop the simulation—the application handles it seamlessly.
+- ⚙️ **Optimized Performance**: The application's performance is fully optimized, ensuring that resource consumption is negligible. You can run it in the background without any impact on your system's performance.
+- 🚫 **No Game Installation Required**: You don't need to have the games installed on your computer—only the Steam application is required. This saves disk space and simplifies the process of simulating playtime.
+- ⏱️ **Coming Soon:** More functionalities are on the way! I'm actively working on adding new features to enhance your experience. Stay tuned for future updates.
 
 ## 📋 Requirements
-- Have **Steam** installed and running on your system.
-- Own a Steam account with access to your game library.
+- Own a Steam account with **at least one game** in your library.
+- Have Steam **installed and running** on your system.
 
 ## 🕹 Usage
 
