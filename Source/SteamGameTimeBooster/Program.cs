@@ -39,13 +39,11 @@ internal static class Program
             return;
         }
 
-        LogIn();
-
-        if (!IsLoggedIn())
+        do
         {
-            WriteColoredLine("❌ Invalid user credentials.", ConsoleColor.Red);
-            return;
+            LogIn();
         }
+        while (!IsLoggedIn());
 
         List<GameDataModel> userGames = GetAllUserGames();
         if (userGames == null || userGames.Count == 0)
@@ -260,7 +258,15 @@ internal static class Program
         HtmlDocument document = new();
         document.LoadHtml(response);
 
-        return document.DocumentNode.SelectSingleNode("//div[@class=\"responsive_menu_user_area\"]") != null;
+        bool loggedIn = document.DocumentNode.SelectSingleNode("//div[@class=\"responsive_menu_user_area\"]") != null;
+
+        if (!loggedIn)
+        {
+            WriteColoredLine("❌ Invalid user credentials.", ConsoleColor.Red);
+            Console.WriteLine();
+        } 
+
+        return loggedIn;
     }
 
     private static List<GameDataModel> GetAllUserGames()
