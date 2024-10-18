@@ -1,11 +1,11 @@
 ﻿namespace SteamGameTimeBooster.DataTransferObjects;
 
-public class GamesListDataModel
+public sealed class GamesListDataModel
 {
-    public required List<GameDataModel> RgGames { get; set; }
+    public required List<Game> RgGames { get; set; }
 }
 
-public class GameDataModel
+public sealed class Game
 {
     public required int AppId { get; set; }
     public required string Name { get; set; }

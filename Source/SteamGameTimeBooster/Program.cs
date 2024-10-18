@@ -1,28 +1,21 @@
-﻿using HtmlAgilityPack;
-using SteamGameTimeBooster.DataTransferObjects;
+﻿using SteamGameTimeBooster.DataTransferObjects;
+using SteamGameTimeBooster.Managers;
 using System.Diagnostics;
 using System.Globalization;
-using System.Net;
-using System.Text.Json;
+using static SteamGameTimeBooster.Helpers.ConsoleHelper;
 
 namespace SteamGameTimeBooster;
 
 internal static class Program
 {
-    private static string userName;
-    private static string sessionId;
-    private static string steamLoginSecure;
-
-    private static readonly List<Process> runningProcesses = [];
-
     private static async Task Main(string[] args)
     {
         Console.OutputEncoding = System.Text.Encoding.UTF8;
         Console.WindowWidth = 140;
         Console.WindowHeight = 40;
 
-        AppDomain.CurrentDomain.ProcessExit += (s, e) => KillAllProcesses();
-        Console.CancelKeyPress += (s, e) => { e.Cancel = true; KillAllProcesses(); Environment.Exit(0); };
+        AppDomain.CurrentDomain.ProcessExit += (s, e) => ProcessManager.Instance.KillAllProcesses();
+        Console.CancelKeyPress += (s, e) => { e.Cancel = true; ProcessManager.Instance.KillAllProcesses(); Environment.Exit(0); };
 
         Console.WriteLine();
         WriteColoredLine(" ██████╗  █████╗ ███╗   ███╗███████╗    ████████╗██╗███╗   ███╗███████╗    ██████╗  ██████╗  ██████╗ ███████╗████████╗███████╗██████╗ ", ConsoleColor.Magenta);
@@ -39,13 +32,10 @@ internal static class Program
             return;
         }
 
-        do
-        {
-            LogIn();
-        }
-        while (!IsLoggedIn());
+        do SessionManager.Instance.LogIn();
+        while (!SessionManager.Instance.IsLoggedIn());
 
-        List<GameDataModel> userGames = GetAllUserGames();
+        List<Game> userGames = SessionManager.Instance.GetAllUserGames();
         if (userGames == null || userGames.Count == 0)
         {
             WriteColoredLine("⚠️ No games found for the user.", ConsoleColor.Yellow);
@@ -62,7 +52,7 @@ internal static class Program
         Console.WriteLine();
 
         CancellationTokenSource cts = new();
-        IEnumerable<Task> tasks = pickedGames.Select(gameId => StartGameProcess(gameId, userGames, duration, cts.Token));
+        IEnumerable<Task> tasks = pickedGames.Select(gameId => ProcessManager.Instance.StartGameProcess(gameId, userGames, duration, cts.Token));
 
         await Task.WhenAll(tasks);
 
@@ -70,72 +60,16 @@ internal static class Program
         WriteColoredLine("✅ All processes have finished.", ConsoleColor.Green);
     }
 
-    private static void DisplayGameList(List<GameDataModel> userGames)
+    private static void DisplayGameList(List<Game> userGames)
     {
         Console.WriteLine();
         WriteColoredLine("🎮 Available Games:", ConsoleColor.Cyan);
 
-        foreach (GameDataModel game in userGames)
+        foreach (Game game in userGames)
             WriteColoredLine($"    [{game.AppId}] {game.Name}", ConsoleColor.White);
     }
 
-    private static void LogIn()
-    {
-        while (true)
-        {
-            WriteColored("⌨️ Enter your steam username: (type 'help' if you don't know how to get it) ", ConsoleColor.Yellow);
-            userName = Console.ReadLine();
-
-            if (string.IsNullOrWhiteSpace(userName))
-                WriteColoredLine("❌ Input cannot be empty. Please try again.", ConsoleColor.Red);
-
-            else if (userName == "help")
-            {
-                WriteColoredLine("ℹ️ Just enter the name you normally log in with.", ConsoleColor.DarkYellow);
-                Console.WriteLine();
-            }
-
-            else break;
-        }
-
-        while (true)
-        {
-            WriteColored("⌨️ Enter your steam sessionId: (type 'help' if you don't know how to get it) ", ConsoleColor.Yellow);
-            sessionId = Console.ReadLine();
-
-            if (string.IsNullOrWhiteSpace(sessionId))
-                WriteColoredLine("❌ Input cannot be empty. Please try again.", ConsoleColor.Red);
-
-            else if (sessionId == "help")
-            {
-                WriteColoredLine("ℹ️ Login to the official Steam Community website (https://steamcommunity.com/) in your web browser.", ConsoleColor.DarkYellow);
-                WriteColoredLine("ℹ️ Press F12 > Application/Storage > Cookies > Select the Steam website > Copy the value of sessionId cookie.", ConsoleColor.DarkYellow);
-                Console.WriteLine();
-            }
-
-            else break;
-        }
-
-        while (true)
-        {
-            WriteColored("⌨️ Enter your steam steamLoginSecure: (type 'help' if you don't know how to get it) ", ConsoleColor.Yellow);
-            steamLoginSecure = Console.ReadLine();
-
-            if (string.IsNullOrWhiteSpace(steamLoginSecure))
-                WriteColoredLine("❌ Input cannot be empty. Please try again.", ConsoleColor.Red);
-
-            else if (steamLoginSecure == "help")
-            {
-                WriteColoredLine("ℹ️ Login to the official Steam Community website (https://steamcommunity.com/) in your web browser.", ConsoleColor.DarkYellow);
-                WriteColoredLine("ℹ️ Press F12 > Application / Storage > Cookies > Select the Steam website > Copy the value of steamLoginSecure cookie.", ConsoleColor.DarkYellow);
-                Console.WriteLine();
-            }
-
-            else break;
-        }
-    }
-
-    private static List<int> GetUserGameSelection(List<GameDataModel> userGames)
+    private static List<int> GetUserGameSelection(List<Game> userGames)
     {
         while (true)
         {
@@ -176,121 +110,5 @@ internal static class Program
             else
                 WriteColoredLine("❌ Invalid duration format.", ConsoleColor.Red);
         }
-    }
-
-    private static async Task StartGameProcess(int gameId, List<GameDataModel> userGames, TimeSpan duration, CancellationToken token)
-    {
-        string appId = userGames.First(x => x.AppId == gameId).AppId.ToString();
-        Process process = new()
-        {
-            StartInfo = new ProcessStartInfo("steam-idle.exe", appId)
-            {
-                WindowStyle = ProcessWindowStyle.Hidden,
-                CreateNoWindow = true,
-                UseShellExecute = false
-            }
-        };
-
-        try
-        {
-            process.Start();
-
-            lock (runningProcesses) { runningProcesses.Add(process); }
-
-            WriteColoredLine($"▶️ Started process for game {appId}.", ConsoleColor.Green);
-
-            await Task.Delay(duration, token);
-
-            if (!process.HasExited)
-            {
-                process.Kill();
-
-                Console.WriteLine();
-                WriteColoredLine($"⏹️ Process for game {appId} has been terminated after {duration.TotalMinutes} minute(s).", ConsoleColor.Magenta);
-            }
-        }
-        catch (Exception ex)
-        {
-            WriteColoredLine($"❌ Error with game {appId}: {ex.Message}.", ConsoleColor.Red);
-        }
-        finally
-        {
-            lock (runningProcesses) { runningProcesses.Remove(process); }
-            process.Dispose();
-        }
-    }
-
-    private static void KillAllProcesses()
-    {
-        lock (runningProcesses)
-        {
-            foreach (Process process in runningProcesses)
-            {
-                if (!process.HasExited)
-                {
-                    process.Kill();
-                    WriteColoredLine($"⏹️ Terminated process ID {process.Id}.", ConsoleColor.Magenta);
-                }
-            }
-            runningProcesses.Clear();
-        }
-    }
-
-    private static void WriteColored(string text, ConsoleColor color)
-    {
-        ConsoleColor originalColor = Console.ForegroundColor;
-        Console.ForegroundColor = color;
-        Console.Write("  ");
-        Console.Write(text);
-        Console.ForegroundColor = originalColor;
-    }
-
-    private static void WriteColoredLine(string text, ConsoleColor color)
-    {
-        WriteColored(text + Environment.NewLine, color);
-    }
-
-    private static bool IsLoggedIn()
-    {
-        using HttpClient client = new(CreateSteamCookiesHandler());
-        string response = client.GetStringAsync($"https://steamcommunity.com/id/{userName}").Result;
-
-        HtmlDocument document = new();
-        document.LoadHtml(response);
-
-        bool loggedIn = document.DocumentNode.SelectSingleNode("//div[@class=\"responsive_menu_user_area\"]") != null;
-
-        if (!loggedIn)
-        {
-            WriteColoredLine("❌ Invalid user credentials.", ConsoleColor.Red);
-            Console.WriteLine();
-        } 
-
-        return loggedIn;
-    }
-
-    private static List<GameDataModel> GetAllUserGames()
-    {
-        using HttpClient client = new(CreateSteamCookiesHandler());
-        string htmlResponse = client.GetStringAsync($"https://steamcommunity.com/id/{userName}/games?tab=all").Result;
-
-        HtmlDocument doc = new();
-        doc.LoadHtml(htmlResponse);
-
-        HtmlNode? templateNode = doc.DocumentNode.SelectSingleNode("//template[@id='gameslist_config']");
-        string jsonData = WebUtility.HtmlDecode(templateNode.GetAttributeValue("data-profile-gameslist", ""));
-
-        JsonSerializerOptions options = new() { PropertyNameCaseInsensitive = true };
-        GamesListDataModel? deserializedJson = JsonSerializer.Deserialize<GamesListDataModel>(jsonData, options);
-
-        return deserializedJson?.RgGames.OrderBy(x => x.Name).ToList() ?? [];
-    }
-
-    private static HttpClientHandler CreateSteamCookiesHandler()
-    {
-        HttpClientHandler handler = new() { CookieContainer = new CookieContainer() };
-        handler.CookieContainer.Add(new Cookie("sessionid", sessionId, "/", "steamcommunity.com"));
-        handler.CookieContainer.Add(new Cookie("steamLoginSecure", steamLoginSecure, "/", "steamcommunity.com"));
-        return handler;
     }
 }
