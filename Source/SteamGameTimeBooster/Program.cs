@@ -17,9 +17,12 @@ internal static class Program
 
     private static async Task Main(string[] args)
     {
+        Console.OutputEncoding = System.Text.Encoding.UTF8;
+        Console.WindowWidth = 140;
+        Console.WindowHeight = 40;
+
         AppDomain.CurrentDomain.ProcessExit += (s, e) => KillAllProcesses();
         Console.CancelKeyPress += (s, e) => { e.Cancel = true; KillAllProcesses(); Environment.Exit(0); };
-        Console.OutputEncoding = System.Text.Encoding.UTF8;
 
         Console.WriteLine();
         WriteColoredLine(" ██████╗  █████╗ ███╗   ███╗███████╗    ████████╗██╗███╗   ███╗███████╗    ██████╗  ██████╗  ██████╗ ███████╗████████╗███████╗██████╗ ", ConsoleColor.Magenta);
